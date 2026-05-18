@@ -33,7 +33,7 @@ python engine/spec-generator.py --input ideas/example-idea.md --output specs/exa
 
 ## Kick off a new article
 
-1. Create a new markdown idea file in `/ideas` (for example: `ideas/my-next-article.md`).
+1. Create a new markdown idea file in `/ideas` (for example: `ideas/spec-first-content-pipeline.md`).
 2. Use this minimal structure:
 
 ```md
@@ -48,12 +48,13 @@ One short paragraph describing the key thesis.
 - Section topic two
 ```
 
-3. Commit and merge the change to `main` to trigger the intake workflow automatically (`.github/workflows/intake.yml`).
-4. Optional: run the intake workflow manually from the Actions tab using **Run workflow**.
-5. Optional local step: generate a spec before pushing:
+3. Push the change to a feature branch and open a PR.
+4. Merge the PR to `main` to trigger the intake workflow automatically (`.github/workflows/intake.yml`).
+5. Optional: run the intake workflow manually from the Actions tab using **Run workflow**.
+6. Optional local step: generate a spec before pushing:
 
 ```bash
-python engine/spec-generator.py --input ideas/my-next-article.md --output specs/my-next-article.json
+python engine/spec-generator.py --input ideas/spec-first-content-pipeline.md --output specs/spec-first-content-pipeline.json
 ```
 
 The generated spec follows this schema:
