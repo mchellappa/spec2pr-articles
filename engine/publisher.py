@@ -94,6 +94,15 @@ def _ssl_context(verify: bool) -> ssl.SSLContext:
 # Dev.to publisher
 # ---------------------------------------------------------------------------
 
+def _prepend_frontmatter(content: str) -> str:
+    """Prepend YAML frontmatter with cover_image so Dev.to renders it as a header image."""
+    frontmatter = f"---\ncover_image: {SERIES_COVER_IMAGE}\n---\n\n"
+    # Don't double-add if it's already there
+    if content.startswith("---"):
+        return content
+    return frontmatter + content
+
+
 def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: bool = True) -> dict:
     """POST an article to Dev.to. Returns the API response dict."""
     published = bool(spec.get("publish"))
@@ -101,11 +110,10 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: b
     body = {
         "article": {
             "title": spec["title"],
-            "body_markdown": draft_content,
+            "body_markdown": _prepend_frontmatter(draft_content),
             "published": published,
             "tags": spec.get("tags", [])[:4],  # Dev.to allows up to 4 tags
             "series": "Spec2PR: Intelligent Software Delivery",
-            "cover_image": SERIES_COVER_IMAGE,
         }
     }
 
@@ -138,7 +146,7 @@ def update_on_devto(api_key: str, post_id: str, spec: dict, draft_content: str, 
     body = {
         "article": {
             "title": spec["title"],
-            "body_markdown": draft_content,
+            "body_markdown": _prepend_frontmatter(draft_content),
             "published": published,
             "tags": spec.get("tags", [])[:4],
             "cover_image": SERIES_COVER_IMAGE,
