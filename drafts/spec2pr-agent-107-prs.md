@@ -14,15 +14,9 @@
 
 # The Agent That Created 107 PRs (And Why That Was the Problem)
 
-At my organisation, our leadership classifies AI initiatives into three buckets.
+One of our leaders has a way of framing AI initiatives that I find genuinely useful. Three buckets: Vibe Coding, Professional AI Assistant, and Autonomous Agents. I won't unpack it further — but if you've worked in a large engineering org lately, you probably recognise all three.
 
-**Vibe Coding** — developers using AI to move faster, autocomplete code, explore ideas. Low structure, high energy, individual productivity gains.
-
-**Professional AI Assistant** — AI embedded into structured workflows. Thinks before it acts. Works alongside an engineer who stays in the loop.
-
-**Autonomous Agents** — AI that takes a task end-to-end with minimal human involvement. Acts, decides, commits, raises PRs. Leadership loves this one.
-
-The push lately has been toward that third bucket. And I get it. The metrics are compelling. Story points closed. Alerts resolved. PRs raised. Numbers that look excellent on a CIO dashboard.
+The push has been toward that third one. And I get it. The metrics are compelling. Story points closed. Alerts resolved. PRs raised. Numbers that look excellent on a CIO dashboard.
 
 This is a story about what those numbers don't show.
 
