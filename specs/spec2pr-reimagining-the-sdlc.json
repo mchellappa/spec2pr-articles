@@ -36,5 +36,5 @@
     "architecture",
     "devops"
   ],
-  "publish": false
+  "publish": true
 }
