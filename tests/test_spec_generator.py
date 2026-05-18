@@ -7,10 +7,10 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = REPO_ROOT / "engine" / "spec-generator.py"
-SPEC = importlib.util.spec_from_file_location("spec_generator", MODULE_PATH)
-spec_generator = importlib.util.module_from_spec(SPEC)
-assert SPEC and SPEC.loader
-SPEC.loader.exec_module(spec_generator)
+MODULE_SPEC = importlib.util.spec_from_file_location("spec_generator", MODULE_PATH)
+spec_generator = importlib.util.module_from_spec(MODULE_SPEC)
+assert MODULE_SPEC and MODULE_SPEC.loader
+MODULE_SPEC.loader.exec_module(spec_generator)
 
 
 class SpecGeneratorTests(unittest.TestCase):
@@ -32,7 +32,7 @@ Content operations become safer when each stage is deterministic.
         self.assertFalse(result["publish"])
         self.assertGreaterEqual(len(result["sections"]), 1)
 
-    def test_cli_writes_valid_json_spec(self):
+    def test_generate_and_validate_spec_writes_valid_json(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             input_file = tmp_path / "idea.md"

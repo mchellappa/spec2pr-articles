@@ -16,6 +16,8 @@ REQUIRED_KEYS = {
     "tags",
     "publish",
 }
+MIN_TAG_LENGTH = 4
+MAX_TAG_COUNT = 5
 
 
 def slugify(value: str) -> str:
@@ -112,12 +114,12 @@ def _extract_prefixed_value(lines: list[str], prefix: str) -> str:
 
 
 def _extract_tags(title: str, thesis: str) -> list[str]:
-    candidates = re.findall(r"[a-zA-Z]{4,}", f"{title} {thesis}".lower())
+    candidates = re.findall(rf"[a-zA-Z]{{{MIN_TAG_LENGTH},}}", f"{title} {thesis}".lower())
     deduped: list[str] = []
     for token in candidates:
         if token not in deduped:
             deduped.append(token)
-        if len(deduped) == 5:
+        if len(deduped) == MAX_TAG_COUNT:
             break
     return deduped or ["writing", "engineering"]
 
