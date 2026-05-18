@@ -14,6 +14,8 @@ import json
 from pathlib import Path
 
 
+LOGO_URL = "https://raw.githubusercontent.com/mchellappa/devex-workspace/main/images/icon.png"
+
 DRAFT_HEADER = """\
 <!--
   Draft generated from spec: {spec_id}
@@ -27,6 +29,8 @@ DRAFT_HEADER = """\
   - Keep tone and audience in mind (see above).
   - When ready to publish, set "publish": true in the spec JSON.
 -->
+
+![Spec2PR — DevEx AI Assistant]({logo_url})
 
 # {title}
 
@@ -44,7 +48,8 @@ SECTION_TEMPLATE = """\
 DRAFT_FOOTER = """\
 ---
 
-*Published via [spec2pr-articles](https://github.com/mchellappa/spec2pr-articles).*
+*This article is part of the **Spec2PR** series on Intelligent Software Delivery.*
+*[DevEx AI Assistant](https://github.com/mchellappa/devex-workspace) — AI-powered SDLC acceleration for engineering teams.*
 """
 
 
@@ -56,6 +61,7 @@ def scaffold_draft(spec: dict) -> str:
         tone=spec.get("tone", ""),
         tags=", ".join(spec.get("tags", [])),
         key_thesis=spec.get("key_thesis", ""),
+        logo_url=LOGO_URL,
     )
 
     sections = "\n".join(

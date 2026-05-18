@@ -15,6 +15,8 @@
 
 > The future of software delivery is not faster coding. It is intelligent orchestration.
 
+![Spec2PR — DevEx AI Assistant](https://raw.githubusercontent.com/mchellappa/devex-workspace/main/images/icon.png)
+
 I didn't set out to rethink the software delivery lifecycle.
 
 I set out to help engineers ship faster. What I discovered along the way changed how I think about AI, engineering systems, and what the real bottlenecks in software delivery actually are.
@@ -197,6 +199,5 @@ That is the idea behind Spec2PR — and the thread I will continue pulling on in
 
 ---
 
-*This is the first article in a series on Intelligent Software Delivery. Future topics: Context Is the Real AI Moat, Architecture as Organizational Memory, and Multi-Agent Engineering Workflows.*
-
-*Published via [spec2pr-articles](https://github.com/mchellappa/spec2pr-articles).*
+*This article is part of the **Spec2PR** series on Intelligent Software Delivery.*
+*[DevEx AI Assistant](https://github.com/mchellappa/devex-workspace) — AI-powered SDLC acceleration for engineering teams.*

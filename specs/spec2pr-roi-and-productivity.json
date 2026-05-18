@@ -1,0 +1,36 @@
+{
+  "id": "spec2pr-roi-and-productivity",
+  "title": "Spec2PR: Proving AI ROI to Leadership — The Numbers Behind 5.5 Hours Saved Per Sprint",
+  "audience": "Engineering leaders, CTOs, and engineering managers making the case for AI investment",
+  "tone": "Data-driven and pragmatic — evidence over enthusiasm",
+  "key_thesis": "Claiming AI saves time is easy. Proving it to a CFO or VP of Engineering requires numbers, methodology, and a tracking system they can trust. This article explains how the Spec2PR productivity dashboard was built into the DevEx AI Assistant extension — tracking time saved per project, ROI calculations, and adoption metrics — and how we validated the 5.5-hour savings figure that justified continued investment and wider rollout.",
+  "sections": [
+    {
+      "heading": "What metrics actually matter to leadership vs what engineers care about",
+      "intent": "Explain what metrics actually matter to leadership vs what engineers care about with practical examples."
+    },
+    {
+      "heading": "How the local telemetry system tracks time saved without sending data to the cloud",
+      "intent": "Explain how the local telemetry system tracks time saved without sending data to the cloud with practical examples."
+    },
+    {
+      "heading": "The methodology behind the 5.5 hours saved per project calculation",
+      "intent": "Explain the methodology behind the 5.5 hours saved per project calculation with practical examples."
+    },
+    {
+      "heading": "ROI math: from single engineer savings to team and organizational impact",
+      "intent": "Explain roi math: from single engineer savings to team and organizational impact with practical examples."
+    },
+    {
+      "heading": "How to use the productivity dashboard to build an AI investment case for leadership",
+      "intent": "Explain how to use the productivity dashboard to build an ai investment case for leadership with practical examples."
+    }
+  ],
+  "tags": [
+    "ai",
+    "productivity",
+    "engineering",
+    "leadership"
+  ],
+  "publish": false
+}

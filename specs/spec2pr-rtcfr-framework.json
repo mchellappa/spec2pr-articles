@@ -1,0 +1,36 @@
+{
+  "id": "spec2pr-rtcfr-framework",
+  "title": "Spec2PR: Why We Replaced Prompt Engineering with the RTCFR Framework",
+  "audience": "Engineering leaders, senior engineers, and platform teams building AI workflows",
+  "tone": "Reflective and analytical — lessons learned from real adoption at scale",
+  "key_thesis": "When we gave engineers access to GitHub Copilot, prompt quality became the bottleneck. The engineers who wrote the best prompts got the best code. Everyone else got drift. This article explains why we stopped training engineers to write better prompts and instead embedded the RTCFR framework — Role, Task, Context, Format, Report — directly into the DevEx AI Assistant extension, making principal-engineer-level context the default for every interaction.",
+  "sections": [
+    {
+      "heading": "Why prompt engineering at scale creates inconsistency, not consistency",
+      "intent": "Explain why prompt engineering at scale creates inconsistency, not consistency with practical examples."
+    },
+    {
+      "heading": "What RTCFR means: Role, Task, Context, Format, Report — and why each element matters",
+      "intent": "Explain what rtcfr means: role, task, context, format, report — and why each element matters with practical examples."
+    },
+    {
+      "heading": "How RTCFR is embedded into the DevEx extension so engineers never write a raw prompt",
+      "intent": "Explain how rtcfr is embedded into the devex extension so engineers never write a raw prompt with practical examples."
+    },
+    {
+      "heading": "Before and after: what LLD-based RTCFR-structured generation produces vs ad-hoc prompts",
+      "intent": "Explain before and after: what lld-based rtcfr-structured generation produces vs ad-hoc prompts with practical examples."
+    },
+    {
+      "heading": "Why encoding engineering frameworks into AI workflows is more durable than training individuals",
+      "intent": "Explain why encoding engineering frameworks into ai workflows is more durable than training individuals with practical examples."
+    }
+  ],
+  "tags": [
+    "ai",
+    "softwareengineering",
+    "productivity",
+    "devops"
+  ],
+  "publish": false
+}

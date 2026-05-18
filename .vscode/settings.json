@@ -1,0 +1,4 @@
+{
+    "github.copilot.chat.useProjectTemplates": true,
+    "snyk.advanced.autoSelectOrganization": true
+}

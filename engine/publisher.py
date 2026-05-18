@@ -102,6 +102,7 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: b
             "body_markdown": draft_content,
             "published": published,
             "tags": spec.get("tags", [])[:4],  # Dev.to allows up to 4 tags
+            "series": "Spec2PR: Intelligent Software Delivery",
         }
     }
 
