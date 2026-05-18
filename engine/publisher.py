@@ -107,15 +107,16 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: b
     """POST an article to Dev.to. Returns the API response dict."""
     published = bool(spec.get("publish"))
 
-    body = {
-        "article": {
+    article: dict = {
             "title": spec["title"],
             "body_markdown": _prepend_frontmatter(draft_content),
             "published": published,
             "tags": spec.get("tags", [])[:4],  # Dev.to allows up to 4 tags
-            "series": "Spec2PR: Intelligent Software Delivery",
         }
-    }
+    if spec.get("series"):
+        article["series"] = spec["series"]
+
+    body = {"article": article}
 
     data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(

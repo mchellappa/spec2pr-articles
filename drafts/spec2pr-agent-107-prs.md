@@ -1,6 +1,6 @@
 <!--
   Draft generated from spec: spec2pr-agent-107-prs
-  Title: Spec2PR: The Agent That Created 107 PRs (And Why That Was the Problem)
+  Title: The Agent That Created 107 PRs (And Why That Was the Problem)
   Audience: Engineering leaders, DevSecOps practitioners, and senior engineers evaluating AI agents in CI/CD pipelines
   Tone: Honest and reflective — a real story told without spin, inviting debate and shared experience
   Tags: ai, devsecops, softwareengineering, github
@@ -12,7 +12,7 @@
   - Cover image (logo) is set automatically by publisher.py via the cover_image API field.
 -->
 
-# Spec2PR: The Agent That Created 107 PRs (And Why That Was the Problem)
+# The Agent That Created 107 PRs (And Why That Was the Problem)
 
 > **Key thesis:** An AI agent that acts without analyzing is just a faster way to make mistakes at scale. The missing step between detect and fix is: understand.
 
@@ -85,31 +85,13 @@ This is the hidden math of autonomous agents: **the cost of reviewing an AI's wo
 
 ---
 
-## The Fix: Require a Spec Before the Code
-
-When we stepped back and asked what had gone wrong, the answer was clear: the agent had skipped the most important step in any engineering task — the analysis.
-
-The Spec2PR approach addresses this directly. Before an agent writes a single line of code or opens a single PR, it must produce a **spec**: a structured, human-readable reasoning document that answers:
-
-- **What is the alert?** (exact description, file, line)
-- **What is the root cause?** (not just what the scanner flagged, but why it exists)
-- **What is the proposed fix?** (the approach, not just the code)
-- **What is the risk?** (what could this change break? are there edge cases?)
-- **Is this the right fix, or should the rule be suppressed?**
-
-A human reviews the spec — typically a 2-minute read — before the agent writes any code. If the spec is wrong, the agent is corrected before it produces a PR. If the spec is right, the PR review becomes a formality: the code is already aligned with an approved approach.
-
-Instead of 107 PRs needing individual evaluation, you get 107 specs that can be triaged in a fraction of the time — and a much smaller number of PRs that engineers can trust.
-
-The agent does not lose its speed. It gains a thinking step first.
-
----
-
 ## Let's Talk: Have You Seen This?
 
 This experience made us rethink something we thought we understood: that automation is always an improvement over manual work.
 
-It is — but only when the automation includes the reasoning, not just the execution.
+Maybe it is. Maybe the answer is better tooling, better prompts, better pipelines. Maybe this is just a growing pain and we will figure it out.
+
+But I am not sure — and I think that uncertainty is worth sitting with for a moment before we rush to the next solution.
 
 I am genuinely curious whether others have run into this pattern. A few questions I would love to hear your perspective on:
 
@@ -120,16 +102,11 @@ Not because it was wrong, but because the volume of its output overwhelmed your 
 Do you rely on tests? Code review? A separate validation agent? Something else?
 
 **3. What is your human-AI handoff model for security fixes?**
-Should agents always produce a reasoning document before they act? Or is that overkill for simple, well-understood patterns?
+Should agents always get human sign-off on the approach before they act? Or is that friction that defeats the purpose?
 
 **4. Where is the right boundary between autonomous action and human approval?**
-One PR per alert? One spec per alert? One summary per batch? Something else entirely?
+One PR per alert? A summary per batch? A reasoning doc before any code? Nothing at all?
 
-There is no single right answer here — it depends on team size, risk tolerance, codebase complexity, and how much you trust your scanner's signal quality. But I think this conversation is worth having publicly, because most teams are figuring this out in isolation.
+There is no single right answer here. It depends on team size, risk tolerance, codebase complexity, and how much you trust your scanner's signal quality. But I think this conversation is worth having publicly, because most teams are figuring it out in isolation.
 
-Drop your experience in the comments. The more honest examples we share, the better we collectively get at using these tools well.
-
----
-
-*This article is part of the **Spec2PR** series on Intelligent Software Delivery.*
-*[DevEx AI Assistant](https://github.com/mchellappa/devex-workspace) — AI-powered SDLC acceleration for engineering teams.*
+Drop your experience in the comments. I want to hear the honest stories — the ones where it worked, and the ones where it didn't.

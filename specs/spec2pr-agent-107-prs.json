@@ -1,6 +1,6 @@
 {
   "id": "spec2pr-agent-107-prs",
-  "title": "Spec2PR: The Agent That Created 107 PRs (And Why That Was the Problem)",
+  "title": "The Agent That Created 107 PRs (And Why That Was the Problem)",
   "audience": "Engineering leaders, DevSecOps practitioners, and senior engineers evaluating AI agents in CI/CD pipelines",
   "tone": "Honest and reflective — a real story told without spin, inviting debate and shared experience",
   "key_thesis": "An AI agent that acts without analyzing is just a faster way to make mistakes at scale. The missing step between detect and fix is: understand.",

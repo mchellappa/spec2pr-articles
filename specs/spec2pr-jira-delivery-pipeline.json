@@ -32,5 +32,6 @@
     "softwareengineering",
     "devops"
   ],
-  "publish": false
+  "publish": false,
+  "series": "Spec2PR: Intelligent Software Delivery"
 }

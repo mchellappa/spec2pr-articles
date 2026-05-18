@@ -2,7 +2,7 @@
   "id": "spec2pr-reimagining-the-sdlc",
   "title": "Spec2PR: Reimagining the SDLC for Intelligent Software Delivery",
   "audience": "Engineering leaders, software architects, and senior engineers",
-  "tone": "Reflective and practical \u2014 a personal engineering journey",
+  "tone": "Reflective and practical — a personal engineering journey",
   "key_thesis": "I started by trying to accelerate coding with AI. I ended up realizing the real bottleneck was coordination. This article documents the evolution of thinking behind Spec2PR and the realization that software delivery problems are fundamentally orchestration and context problems, not coding problems.",
   "sections": [
     {
@@ -22,8 +22,8 @@
       "intent": "Explain the next bottleneck: upstream context quality determines downstream implementation quality with practical examples."
     },
     {
-      "heading": "Context degradation across the SDLC \u2014 how intent gets lost at every handoff",
-      "intent": "Explain context degradation across the sdlc \u2014 how intent gets lost at every handoff with practical examples."
+      "heading": "Context degradation across the SDLC — how intent gets lost at every handoff",
+      "intent": "Explain context degradation across the sdlc — how intent gets lost at every handoff with practical examples."
     },
     {
       "heading": "Intelligent SDLC orchestration: the core thesis and what comes next",
@@ -36,5 +36,6 @@
     "architecture",
     "devops"
   ],
-  "publish": true
+  "publish": true,
+  "series": "Spec2PR: Intelligent Software Delivery"
 }
