@@ -1,4 +1,4 @@
-name: Publish to Medium
+name: Publish to Dev.to (or Medium)
 
 on:
   push:
@@ -11,6 +11,14 @@ on:
         description: "Spec file to publish (e.g. specs/my-article.json). Leave blank to publish all ready specs."
         required: false
         default: ""
+      target:
+        description: "Publish target"
+        required: false
+        default: "devto"
+        type: choice
+        options:
+          - devto
+          - medium
 
 jobs:
   publish:
@@ -60,13 +68,15 @@ jobs:
           done
           echo "specs=$ready" >> "$GITHUB_OUTPUT"
 
-      - name: Publish articles to Medium
+      - name: Publish articles
         if: steps.find-specs.outputs.specs != ''
         env:
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
           MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
           MEDIUM_USER_ID: ${{ secrets.MEDIUM_USER_ID }}
         run: |
           set -euo pipefail
+          target="${{ github.event.inputs.target || 'devto' }}"
           published_count=0
           for spec_file in ${{ steps.find-specs.outputs.specs }}; do
             slug=$(basename "$spec_file" .json)
@@ -77,10 +87,10 @@ jobs:
               continue
             fi
 
-            python engine/publisher.py --spec "$spec_file" --draft "$draft_file"
+            python engine/publisher.py --spec "$spec_file" --draft "$draft_file" --target "$target"
             published_count=$((published_count + 1))
           done
-          echo "Published $published_count article(s)."
+          echo "Published $published_count article(s) to $target."
           echo "published_count=$published_count" >> "$GITHUB_ENV"
 
       - name: Commit updated tracking.json

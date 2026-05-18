@@ -28,16 +28,26 @@ publish.yml           ← posts to Medium, updates published/tracking.json
 
 ## Quick start
 
-### 1. Add your Medium credentials as GitHub Actions secrets
+### 1. Add your API key as a GitHub Actions secret
+
+> **Note:** Medium stopped issuing new API integration tokens in 2025.  
+> **Dev.to is recommended** — it has a free, open API and a large engineering audience.
 
 Go to **Settings → Secrets and variables → Actions → New repository secret** and add:
 
+**For Dev.to (recommended):**
+
 | Secret | Value |
 |---|---|
-| `MEDIUM_TOKEN` | Your Medium integration token (Settings → Security → Integration tokens) |
-| `MEDIUM_USER_ID` | Your Medium user ID — run the command below to find it |
+| `DEVTO_API_KEY` | Your Dev.to API key — get it at [dev.to/settings/extensions](https://dev.to/settings/extensions) under **DEV Community API Keys** |
 
-**Get your Medium user ID:**
+**For Medium (only if you already have a legacy integration token from before 2025):**
+
+| Secret | Value |
+|---|---|
+| `MEDIUM_TOKEN` | Your Medium integration token |
+| `MEDIUM_USER_ID` | Your Medium user ID — run the command below |
+
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" https://api.medium.com/v1/me
 ```
@@ -121,9 +131,13 @@ python engine/spec-generator.py --input ideas/my-article.md --output specs/my-ar
 # Scaffold draft from spec
 python engine/draft-scaffolder.py --spec specs/my-article.json --output drafts/my-article.md
 
-# Publish to Medium (requires env vars)
-MEDIUM_TOKEN=xxx MEDIUM_USER_ID=yyy \
+# Publish to Dev.to (recommended)
+DEVTO_API_KEY=xxx \
   python engine/publisher.py --spec specs/my-article.json --draft drafts/my-article.md
+
+# Publish to Medium (legacy token holders only)
+MEDIUM_TOKEN=xxx MEDIUM_USER_ID=yyy \
+  python engine/publisher.py --spec specs/my-article.json --draft drafts/my-article.md --target medium
 ```
 
 ## Manually trigger publish

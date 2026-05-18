@@ -1,19 +1,28 @@
 """publisher.py
 
-Reads a spec JSON and its corresponding draft Markdown, then publishes (or creates a draft)
-on Medium via the Medium API v1.
+Reads a spec JSON and its corresponding draft Markdown, then publishes the article
+to either Dev.to or Medium (legacy) via their respective APIs.
 
-After a successful publish, updates published/tracking.json with the post's URL and ID.
+After a successful publish, updates published/tracking.json with the post URL and ID.
 
 Usage:
+    # Publish to Dev.to (default, recommended — free API, no token restrictions)
     python engine/publisher.py --spec specs/my-article.json --draft drafts/my-article.md
 
-Environment variables required:
+    # Publish to Medium (only if you already have a legacy integration token)
+    python engine/publisher.py --spec specs/my-article.json --draft drafts/my-article.md --target medium
+
+Environment variables:
+
+  Dev.to (default):
+    DEVTO_API_KEY   - Your Dev.to API key (Settings → Extensions → DEV Community API Keys)
+
+  Medium (legacy — new tokens no longer issued as of 2025):
     MEDIUM_TOKEN    - Your Medium integration token
-    MEDIUM_USER_ID  - Your Medium user ID (obtain via GET /v1/me)
+    MEDIUM_USER_ID  - Your Medium user ID (GET https://api.medium.com/v1/me)
 
 The spec must have "publish": true to post as a public article.
-If "publish" is false the post will be created as a Medium draft so you can preview it.
+If "publish" is false the article is created as a draft for preview.
 """
 
 from __future__ import annotations
@@ -28,9 +37,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
+DEVTO_API_BASE = "https://dev.to/api"
 MEDIUM_API_BASE = "https://api.medium.com/v1"
 TRACKING_FILE = Path(__file__).resolve().parents[1] / "published" / "tracking.json"
 
+
+# ---------------------------------------------------------------------------
+# Tracking helpers
+# ---------------------------------------------------------------------------
 
 def load_tracking() -> dict:
     if TRACKING_FILE.exists():
@@ -47,15 +61,61 @@ def already_published(tracking: dict, spec_id: str) -> bool:
     return any(a.get("id") == spec_id for a in tracking.get("articles", []))
 
 
+# ---------------------------------------------------------------------------
+# Dev.to publisher
+# ---------------------------------------------------------------------------
+
+def publish_to_devto(api_key: str, spec: dict, draft_content: str) -> dict:
+    """POST an article to Dev.to. Returns the API response dict."""
+    published = bool(spec.get("publish"))
+
+    body = {
+        "article": {
+            "title": spec["title"],
+            "body_markdown": draft_content,
+            "published": published,
+            "tags": spec.get("tags", [])[:4],  # Dev.to allows up to 4 tags
+        }
+    }
+
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(
+        f"{DEVTO_API_BASE}/articles",
+        data=data,
+        headers={
+            "api-key": api_key,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        error_body = exc.read().decode("utf-8")
+        print(f"Dev.to API error {exc.code}: {error_body}", file=sys.stderr)
+        raise
+
+
+# ---------------------------------------------------------------------------
+# Medium publisher (legacy)
+# ---------------------------------------------------------------------------
+
 def publish_to_medium(token: str, user_id: str, spec: dict, draft_content: str) -> dict:
+    """POST an article to Medium. Returns the API response dict.
+
+    NOTE: Medium stopped issuing new integration tokens in 2025.
+    This function only works if you already have a legacy token.
+    """
     publish_status = "public" if spec.get("publish") else "draft"
 
-    # Medium API accepts Markdown content
     body = {
         "title": spec["title"],
         "contentFormat": "markdown",
         "content": draft_content,
-        "tags": spec.get("tags", [])[:5],  # Medium allows up to 5 tags
+        "tags": spec.get("tags", [])[:5],
         "publishStatus": publish_status,
     }
 
@@ -81,42 +141,77 @@ def publish_to_medium(token: str, user_id: str, spec: dict, draft_content: str) 
         raise
 
 
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Publish a draft to Medium via the API.")
+    parser = argparse.ArgumentParser(description="Publish a draft article via Dev.to or Medium API.")
     parser.add_argument("--spec", required=True, type=Path, help="Path to spec JSON file")
     parser.add_argument("--draft", required=True, type=Path, help="Path to draft Markdown file")
+    parser.add_argument(
+        "--target",
+        choices=["devto", "medium"],
+        default="devto",
+        help="Publish target: 'devto' (default, recommended) or 'medium' (requires legacy token)",
+    )
     args = parser.parse_args()
-
-    token = os.environ.get("MEDIUM_TOKEN", "").strip()
-    user_id = os.environ.get("MEDIUM_USER_ID", "").strip()
-
-    if not token or not user_id:
-        print("Error: MEDIUM_TOKEN and MEDIUM_USER_ID environment variables must be set.", file=sys.stderr)
-        sys.exit(1)
 
     spec = json.loads(args.spec.read_text(encoding="utf-8"))
     draft_content = args.draft.read_text(encoding="utf-8")
-
     tracking = load_tracking()
 
     if already_published(tracking, spec["id"]):
         print(f"Article '{spec['id']}' is already in tracking.json — skipping.")
         sys.exit(0)
 
-    print(f"Publishing '{spec['title']}' to Medium (status: {'public' if spec.get('publish') else 'draft'})...")
-    result = publish_to_medium(token, user_id, spec, draft_content)
+    publish_label = "public" if spec.get("publish") else "draft"
 
-    post_data = result.get("data", {})
-    entry = {
-        "id": spec["id"],
-        "title": spec["title"],
-        "medium_post_id": post_data.get("id", ""),
-        "url": post_data.get("url", ""),
-        "publish_status": post_data.get("publishStatus", ""),
-        "published_at": datetime.now(timezone.utc).isoformat(),
-        "spec_file": str(args.spec),
-        "draft_file": str(args.draft),
-    }
+    if args.target == "devto":
+        api_key = os.environ.get("DEVTO_API_KEY", "").strip()
+        if not api_key:
+            print("Error: DEVTO_API_KEY environment variable must be set.", file=sys.stderr)
+            print("Get your key at: https://dev.to/settings/extensions", file=sys.stderr)
+            sys.exit(1)
+
+        print(f"Publishing '{spec['title']}' to Dev.to ({publish_label})...")
+        result = publish_to_devto(api_key, spec, draft_content)
+
+        entry = {
+            "id": spec["id"],
+            "title": spec["title"],
+            "target": "devto",
+            "post_id": str(result.get("id", "")),
+            "url": result.get("url", ""),
+            "publish_status": publish_label,
+            "published_at": datetime.now(timezone.utc).isoformat(),
+            "spec_file": str(args.spec),
+            "draft_file": str(args.draft),
+        }
+
+    else:  # medium
+        token = os.environ.get("MEDIUM_TOKEN", "").strip()
+        user_id = os.environ.get("MEDIUM_USER_ID", "").strip()
+        if not token or not user_id:
+            print("Error: MEDIUM_TOKEN and MEDIUM_USER_ID must be set.", file=sys.stderr)
+            print("Note: Medium stopped issuing new tokens in 2025.", file=sys.stderr)
+            sys.exit(1)
+
+        print(f"Publishing '{spec['title']}' to Medium ({publish_label})...")
+        result = publish_to_medium(token, user_id, spec, draft_content)
+        post_data = result.get("data", {})
+
+        entry = {
+            "id": spec["id"],
+            "title": spec["title"],
+            "target": "medium",
+            "post_id": post_data.get("id", ""),
+            "url": post_data.get("url", ""),
+            "publish_status": publish_label,
+            "published_at": datetime.now(timezone.utc).isoformat(),
+            "spec_file": str(args.spec),
+            "draft_file": str(args.draft),
+        }
 
     tracking["articles"].append(entry)
     save_tracking(tracking)
