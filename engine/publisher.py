@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import ssl
 import sys
 import urllib.error
 import urllib.request
@@ -77,11 +78,21 @@ def already_published(tracking: dict, spec_id: str) -> bool:
     return any(a.get("id") == spec_id for a in tracking.get("articles", []))
 
 
+def _ssl_context(verify: bool) -> ssl.SSLContext:
+    """Return an SSL context. Set verify=False in corporate proxy environments."""
+    if verify:
+        return ssl.create_default_context()
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx
+
+
 # ---------------------------------------------------------------------------
 # Dev.to publisher
 # ---------------------------------------------------------------------------
 
-def publish_to_devto(api_key: str, spec: dict, draft_content: str) -> dict:
+def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: bool = True) -> dict:
     """POST an article to Dev.to. Returns the API response dict."""
     published = bool(spec.get("publish"))
 
@@ -102,12 +113,13 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str) -> dict:
             "api-key": api_key,
             "Content-Type": "application/json",
             "Accept": "application/json",
+            "User-Agent": "spec2pr-publisher/1.0 (https://github.com/mchellappa/spec2pr-articles)",
         },
         method="POST",
     )
 
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, context=_ssl_context(verify_ssl)) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         error_body = exc.read().decode("utf-8")
@@ -119,7 +131,7 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str) -> dict:
 # Medium publisher (legacy)
 # ---------------------------------------------------------------------------
 
-def publish_to_medium(token: str, user_id: str, spec: dict, draft_content: str) -> dict:
+def publish_to_medium(token: str, user_id: str, spec: dict, draft_content: str, verify_ssl: bool = True) -> dict:
     """POST an article to Medium. Returns the API response dict.
 
     NOTE: Medium stopped issuing new integration tokens in 2025.
@@ -149,7 +161,7 @@ def publish_to_medium(token: str, user_id: str, spec: dict, draft_content: str) 
     )
 
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, context=_ssl_context(verify_ssl)) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         error_body = exc.read().decode("utf-8")
@@ -171,9 +183,19 @@ def main() -> None:
         default="devto",
         help="Publish target: 'devto' (default, recommended) or 'medium' (requires legacy token)",
     )
+    parser.add_argument(
+        "--no-verify-ssl",
+        action="store_true",
+        default=False,
+        help="Disable SSL certificate verification (use on corporate networks with proxy inspection)",
+    )
     args = parser.parse_args()
 
     _load_env_file()
+
+    verify_ssl = not args.no_verify_ssl
+    if not verify_ssl:
+        print("Warning: SSL verification disabled (corporate proxy mode).", file=sys.stderr)
 
     spec = json.loads(args.spec.read_text(encoding="utf-8"))
     draft_content = args.draft.read_text(encoding="utf-8")
@@ -193,7 +215,7 @@ def main() -> None:
             sys.exit(1)
 
         print(f"Publishing '{spec['title']}' to Dev.to ({publish_label})...")
-        result = publish_to_devto(api_key, spec, draft_content)
+        result = publish_to_devto(api_key, spec, draft_content, verify_ssl=verify_ssl)
 
         entry = {
             "id": spec["id"],
@@ -216,7 +238,7 @@ def main() -> None:
             sys.exit(1)
 
         print(f"Publishing '{spec['title']}' to Medium ({publish_label})...")
-        result = publish_to_medium(token, user_id, spec, draft_content)
+        result = publish_to_medium(token, user_id, spec, draft_content, verify_ssl=verify_ssl)
         post_data = result.get("data", {})
 
         entry = {

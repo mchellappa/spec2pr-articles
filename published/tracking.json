@@ -1,3 +1,15 @@
 {
-  "articles": []
+  "articles": [
+    {
+      "id": "spec2pr-reimagining-the-sdlc",
+      "title": "Spec2PR: Reimagining the SDLC for Intelligent Software Delivery",
+      "target": "devto",
+      "post_id": "3690461",
+      "url": "https://dev.to/mchellappa/spec2pr-reimagining-the-sdlc-for-intelligent-software-delivery-441e-temp-slug-4516528",
+      "publish_status": "draft",
+      "published_at": "2026-05-18T02:52:51.138945+00:00",
+      "spec_file": "specs\\spec2pr-reimagining-the-sdlc.json",
+      "draft_file": "drafts\\spec2pr-reimagining-the-sdlc.md"
+    }
+  ]
 }
