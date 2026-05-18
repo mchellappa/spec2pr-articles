@@ -31,6 +31,31 @@ Generate a content spec from an idea markdown file:
 python engine/spec-generator.py --input ideas/example-idea.md --output specs/example-idea.json
 ```
 
+## Kick off a new article
+
+1. Create a new markdown idea file in `/ideas` (for example: `ideas/my-next-article.md`).
+2. Use this minimal structure:
+
+```md
+# Your article title
+
+Audience: Who this is for
+Tone: Practical
+
+One short paragraph describing the key thesis.
+
+- Section topic one
+- Section topic two
+```
+
+3. Commit and merge the change to `main` to trigger the intake workflow automatically (`.github/workflows/intake.yml`).
+4. Optional: run the intake workflow manually from the Actions tab using **Run workflow**.
+5. Optional local step: generate a spec before pushing:
+
+```bash
+python engine/spec-generator.py --input ideas/my-next-article.md --output specs/my-next-article.json
+```
+
 The generated spec follows this schema:
 
 ```json
