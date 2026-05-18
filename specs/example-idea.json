@@ -1,0 +1,29 @@
+{
+  "id": "example-idea",
+  "title": "Why Spec-First Content Pipelines Improve Editorial Quality",
+  "audience": "Engineering leaders and developer advocates",
+  "tone": "Practical and technical",
+  "key_thesis": "I want to explain how treating content creation like software delivery improves consistency, reduces duplication, and enables safer publishing workflows.",
+  "sections": [
+    {
+      "heading": "Why idea -> spec -> draft improves quality",
+      "intent": "Explain why idea -> spec -> draft improves quality with practical examples."
+    },
+    {
+      "heading": "How deterministic stages reduce operational risk",
+      "intent": "Explain how deterministic stages reduce operational risk with practical examples."
+    },
+    {
+      "heading": "Why GitHub-native workflows make collaboration easier",
+      "intent": "Explain why github-native workflows make collaboration easier with practical examples."
+    }
+  ],
+  "tags": [
+    "spec",
+    "first",
+    "content",
+    "pipelines",
+    "improve"
+  ],
+  "publish": false
+}

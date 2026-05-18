@@ -1,0 +1,97 @@
+name: Publish to Medium
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "specs/**"
+  workflow_dispatch:
+    inputs:
+      spec_file:
+        description: "Spec file to publish (e.g. specs/my-article.json). Leave blank to publish all ready specs."
+        required: false
+        default: ""
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Find specs ready to publish
+        id: find-specs
+        run: |
+          set -euo pipefail
+
+          # If a specific spec was provided via workflow_dispatch, use only that one
+          if [ -n "${{ github.event.inputs.spec_file }}" ]; then
+            echo "specs=${{ github.event.inputs.spec_file }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Otherwise find all specs where publish=true and not yet in tracking.json
+          ready=""
+          for spec_file in specs/*.json; do
+            [ -f "$spec_file" ] || continue
+            publish=$(python -c "import json,sys; d=json.load(open('$spec_file')); print(d.get('publish', False))")
+            if [ "$publish" = "True" ]; then
+              spec_id=$(python -c "import json,sys; d=json.load(open('$spec_file')); print(d.get('id',''))")
+              already=$(python -c "
+          import json, sys
+          try:
+              t = json.load(open('published/tracking.json'))
+              ids = [a.get('id','') for a in t.get('articles',[])]
+              print('yes' if '$spec_id' in ids else 'no')
+          except Exception:
+              print('no')
+          ")
+              if [ "$already" = "no" ]; then
+                ready="$ready $spec_file"
+              fi
+            fi
+          done
+          echo "specs=$ready" >> "$GITHUB_OUTPUT"
+
+      - name: Publish articles to Medium
+        if: steps.find-specs.outputs.specs != ''
+        env:
+          MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
+          MEDIUM_USER_ID: ${{ secrets.MEDIUM_USER_ID }}
+        run: |
+          set -euo pipefail
+          published_count=0
+          for spec_file in ${{ steps.find-specs.outputs.specs }}; do
+            slug=$(basename "$spec_file" .json)
+            draft_file="drafts/${slug}.md"
+
+            if [ ! -f "$draft_file" ]; then
+              echo "Warning: No draft found for $spec_file (expected $draft_file) — skipping."
+              continue
+            fi
+
+            python engine/publisher.py --spec "$spec_file" --draft "$draft_file"
+            published_count=$((published_count + 1))
+          done
+          echo "Published $published_count article(s)."
+          echo "published_count=$published_count" >> "$GITHUB_ENV"
+
+      - name: Commit updated tracking.json
+        if: env.published_count != '' && env.published_count != '0'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add published/tracking.json
+          git diff --cached --quiet || git commit -m "chore: update tracking.json after publish [skip ci]"
+          git push
+
+      - name: No specs ready to publish
+        if: steps.find-specs.outputs.specs == ''
+        run: echo "No specs with publish=true found that aren't already tracked. Nothing to do."

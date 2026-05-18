@@ -11,10 +11,15 @@ jobs:
   intake:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Validate idea files exist
         run: |
@@ -25,6 +30,41 @@ jobs:
             echo "No idea markdown files found in /ideas."
             exit 1
           fi
+
+      - name: Generate specs from new or changed idea files
+        run: |
+          set -euo pipefail
+          mkdir -p specs drafts
+          changed=0
+          for idea_file in ideas/*.md; do
+            slug=$(basename "$idea_file" .md)
+            spec_file="specs/${slug}.json"
+            draft_file="drafts/${slug}.md"
+
+            # Only generate if spec doesn't exist yet
+            if [ ! -f "$spec_file" ]; then
+              echo "Generating spec for: $idea_file"
+              python engine/spec-generator.py --input "$idea_file" --output "$spec_file"
+              changed=1
+            fi
+
+            # Only scaffold draft if draft doesn't exist yet
+            if [ ! -f "$draft_file" ]; then
+              echo "Scaffolding draft for: $spec_file"
+              python engine/draft-scaffolder.py --spec "$spec_file" --output "$draft_file"
+              changed=1
+            fi
+          done
+          echo "changed=$changed" >> "$GITHUB_ENV"
+
+      - name: Commit generated specs and draft skeletons
+        if: env.changed == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add specs/ drafts/
+          git diff --cached --quiet || git commit -m "chore: generate specs and draft skeletons from ideas [skip ci]"
+          git push
 
       - name: Upload intake artifact
         uses: actions/upload-artifact@v4
