@@ -43,6 +43,8 @@ MEDIUM_API_BASE = "https://api.medium.com/v1"
 TRACKING_FILE = Path(__file__).resolve().parents[1] / "published" / "tracking.json"
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 
+SERIES_COVER_IMAGE = "https://raw.githubusercontent.com/mchellappa/devex-workspace/main/images/icon.png"
+
 
 def _load_env_file() -> None:
     """Load key=value pairs from .env into os.environ (if the file exists)."""
@@ -103,6 +105,7 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: b
             "published": published,
             "tags": spec.get("tags", [])[:4],  # Dev.to allows up to 4 tags
             "series": "Spec2PR: Intelligent Software Delivery",
+            "cover_image": SERIES_COVER_IMAGE,
         }
     }
 
@@ -138,6 +141,7 @@ def update_on_devto(api_key: str, post_id: str, spec: dict, draft_content: str, 
             "body_markdown": draft_content,
             "published": published,
             "tags": spec.get("tags", [])[:4],
+            "cover_image": SERIES_COVER_IMAGE,
         }
     }
 

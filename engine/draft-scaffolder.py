@@ -28,9 +28,8 @@ DRAFT_HEADER = """\
   - Fill in each section below.
   - Keep tone and audience in mind (see above).
   - When ready to publish, set "publish": true in the spec JSON.
+  - Cover image (logo) is set automatically by publisher.py via the cover_image API field.
 -->
-
-![Spec2PR — DevEx AI Assistant]({logo_url})
 
 # {title}
 
@@ -61,7 +60,6 @@ def scaffold_draft(spec: dict) -> str:
         tone=spec.get("tone", ""),
         tags=", ".join(spec.get("tags", [])),
         key_thesis=spec.get("key_thesis", ""),
-        logo_url=LOGO_URL,
     )
 
     sections = "\n".join(

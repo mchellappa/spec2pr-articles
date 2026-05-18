@@ -15,9 +15,7 @@
 
 > The future of software delivery is not faster coding. It is intelligent orchestration.
 
-![Spec2PR — DevEx AI Assistant](https://raw.githubusercontent.com/mchellappa/devex-workspace/main/images/icon.png)
-
-I didn't set out to rethink the software delivery lifecycle.
+I didn't set outto rethink the software delivery lifecycle.
 
 I set out to help engineers ship faster. What I discovered along the way changed how I think about AI, engineering systems, and what the real bottlenecks in software delivery actually are.
 
