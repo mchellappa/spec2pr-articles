@@ -127,6 +127,41 @@ def publish_to_devto(api_key: str, spec: dict, draft_content: str, verify_ssl: b
         raise
 
 
+def update_on_devto(api_key: str, post_id: str, spec: dict, draft_content: str, verify_ssl: bool = True) -> dict:
+    """PUT updated content to an existing Dev.to article."""
+    published = bool(spec.get("publish"))
+
+    body = {
+        "article": {
+            "title": spec["title"],
+            "body_markdown": draft_content,
+            "published": published,
+            "tags": spec.get("tags", [])[:4],
+        }
+    }
+
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(
+        f"{DEVTO_API_BASE}/articles/{post_id}",
+        data=data,
+        headers={
+            "api-key": api_key,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "spec2pr-publisher/1.0 (https://github.com/mchellappa/spec2pr-articles)",
+        },
+        method="PUT",
+    )
+
+    try:
+        with urllib.request.urlopen(req, context=_ssl_context(verify_ssl)) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        error_body = exc.read().decode("utf-8")
+        print(f"Dev.to API error {exc.code}: {error_body}", file=sys.stderr)
+        raise
+
+
 # ---------------------------------------------------------------------------
 # Medium publisher (legacy)
 # ---------------------------------------------------------------------------
@@ -184,6 +219,12 @@ def main() -> None:
         help="Publish target: 'devto' (default, recommended) or 'medium' (requires legacy token)",
     )
     parser.add_argument(
+        "--update",
+        action="store_true",
+        default=False,
+        help="Update an already-published/drafted article instead of creating a new one",
+    )
+    parser.add_argument(
         "--no-verify-ssl",
         action="store_true",
         default=False,
@@ -201,8 +242,11 @@ def main() -> None:
     draft_content = args.draft.read_text(encoding="utf-8")
     tracking = load_tracking()
 
-    if already_published(tracking, spec["id"]):
-        print(f"Article '{spec['id']}' is already in tracking.json — skipping.")
+    existing = next((a for a in tracking.get("articles", []) if a.get("id") == spec["id"]), None)
+
+    if existing and not args.update:
+        print(f"Article '{spec['id']}' is already in tracking.json.")
+        print("Use --update to push changes to the existing article.")
         sys.exit(0)
 
     publish_label = "public" if spec.get("publish") else "draft"
@@ -214,20 +258,34 @@ def main() -> None:
             print("Get your key at: https://dev.to/settings/extensions", file=sys.stderr)
             sys.exit(1)
 
-        print(f"Publishing '{spec['title']}' to Dev.to ({publish_label})...")
-        result = publish_to_devto(api_key, spec, draft_content, verify_ssl=verify_ssl)
-
-        entry = {
-            "id": spec["id"],
-            "title": spec["title"],
-            "target": "devto",
-            "post_id": str(result.get("id", "")),
-            "url": result.get("url", ""),
-            "publish_status": publish_label,
-            "published_at": datetime.now(timezone.utc).isoformat(),
-            "spec_file": str(args.spec),
-            "draft_file": str(args.draft),
-        }
+        if args.update and existing:
+            post_id = existing.get("post_id", "")
+            if not post_id:
+                print("Error: no post_id found in tracking.json for this article.", file=sys.stderr)
+                sys.exit(1)
+            print(f"Updating '{spec['title']}' on Dev.to ({publish_label})...")
+            result = update_on_devto(api_key, post_id, spec, draft_content, verify_ssl=verify_ssl)
+            existing.update({
+                "title": spec["title"],
+                "url": result.get("url", existing["url"]),
+                "publish_status": publish_label,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            })
+        else:
+            print(f"Publishing '{spec['title']}' to Dev.to ({publish_label})...")
+            result = publish_to_devto(api_key, spec, draft_content, verify_ssl=verify_ssl)
+            tracking["articles"].append({
+                "id": spec["id"],
+                "title": spec["title"],
+                "target": "devto",
+                "post_id": str(result.get("id", "")),
+                "url": result.get("url", ""),
+                "publish_status": publish_label,
+                "published_at": datetime.now(timezone.utc).isoformat(),
+                "spec_file": str(args.spec),
+                "draft_file": str(args.draft),
+            })
+            result_url = result.get("url", "")
 
     else:  # medium
         token = os.environ.get("MEDIUM_TOKEN", "").strip()
@@ -237,11 +295,14 @@ def main() -> None:
             print("Note: Medium stopped issuing new tokens in 2025.", file=sys.stderr)
             sys.exit(1)
 
+        if args.update:
+            print("Note: Medium API does not support updating existing posts.", file=sys.stderr)
+            sys.exit(1)
+
         print(f"Publishing '{spec['title']}' to Medium ({publish_label})...")
         result = publish_to_medium(token, user_id, spec, draft_content, verify_ssl=verify_ssl)
         post_data = result.get("data", {})
-
-        entry = {
+        tracking["articles"].append({
             "id": spec["id"],
             "title": spec["title"],
             "target": "medium",
@@ -251,12 +312,11 @@ def main() -> None:
             "published_at": datetime.now(timezone.utc).isoformat(),
             "spec_file": str(args.spec),
             "draft_file": str(args.draft),
-        }
+        })
 
-    tracking["articles"].append(entry)
     save_tracking(tracking)
-
-    print(f"Done. URL: {entry['url']}")
+    url = existing.get("url", "") if (args.update and existing) else result.get("url", "")
+    print(f"Done. URL: {url}")
     print(f"Tracking updated: {TRACKING_FILE}")
 
 
