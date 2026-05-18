@@ -40,6 +40,22 @@ from pathlib import Path
 DEVTO_API_BASE = "https://dev.to/api"
 MEDIUM_API_BASE = "https://api.medium.com/v1"
 TRACKING_FILE = Path(__file__).resolve().parents[1] / "published" / "tracking.json"
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
+
+
+def _load_env_file() -> None:
+    """Load key=value pairs from .env into os.environ (if the file exists)."""
+    if not ENV_FILE.exists():
+        return
+    for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
 # ---------------------------------------------------------------------------
@@ -156,6 +172,8 @@ def main() -> None:
         help="Publish target: 'devto' (default, recommended) or 'medium' (requires legacy token)",
     )
     args = parser.parse_args()
+
+    _load_env_file()
 
     spec = json.loads(args.spec.read_text(encoding="utf-8"))
     draft_content = args.draft.read_text(encoding="utf-8")
