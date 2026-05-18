@@ -73,14 +73,23 @@ This was the first real lesson: **AI tools amplify whatever context they are giv
 
 The response to this problem was not to constrain the AI. It was to structure the conversation.
 
-We introduced the RTCFR framework — a structured approach to encoding engineering requirements, technology context, constraints, functional intent, and reliability expectations into every implementation workflow.
+We introduced the RTCFR framework — **Role, Task, Context, Format, Report** — a structured approach to encoding the right engineering information into every implementation workflow before a single line of code is generated.
+
+The difference is easier to see than describe. An unstructured prompt looks like:
+
+> *"Build a REST API endpoint for user authentication."*
+
+An RTCFR-structured workflow looks like:
+
+> *"You are a senior backend engineer on a Java Spring Boot platform (Role). Implement a JWT authentication endpoint (Task). The service must meet our internal security standards, integrate with our existing OAuth provider, handle 10k RPS, and emit structured logs to our observability stack (Context). Output production-ready code with unit tests following our naming conventions (Format). Flag any assumptions about the security model (Report)."*
+
+Same request. Completely different output quality.
 
 The goals were clear:
 
 - Structure engineering conversations before code generation begins
 - Embed engineering rigor into the workflow itself, not as a manual checklist after the fact
 - Abstract complexity away from junior engineers so they benefit from senior engineering thinking by default
-- Standardize implementation guidance across teams
 
 The results were meaningful. Consistency improved. Drift reduced. Junior engineers were producing outputs that reflected organizational standards they had not yet internalized on their own.
 
@@ -88,7 +97,7 @@ But something more important had shifted conceptually.
 
 The platform was no longer just generating code. **It was operationalizing engineering thinking.**
 
-The AI was no longer a code generator. It had become a delivery layer for structured engineering intent. We were encoding how senior engineers thought about problems, and making that thinking available at every implementation step.
+The AI had become a delivery layer for structured engineering intent — encoding how senior engineers think about problems and making that thinking available at every implementation step.
 
 > "Locally correct code can still create globally inconsistent systems."
 
@@ -166,40 +175,28 @@ Where today's AI tools focus on local optimization, Intelligent SDLC Orchestrati
 | Code generation | Intent preservation |
 | Developer productivity | Delivery intelligence |
 
-The key capabilities this requires:
-
-- **Persistent context** — engineering decisions and their rationale preserved across the full lifecycle, not lost between tools
-- **Architecture awareness** — implementation informed by the organizational patterns and constraints it must fit within
-- **NFR propagation** — reliability, scalability, security, and observability requirements flowing through every stage automatically
-- **Organizational engineering memory** — accumulated engineering decisions available to the next engineer, team, and project
-- **Operational feedback loops** — production realities informing upstream design decisions
-
 Code generation is still part of this system. But it becomes one capability within a much larger engineering coordination layer — not the goal itself.
 
-AI becomes transformative when it understands engineering systems, not just source files.
+**AI becomes transformative when it understands engineering systems, not just source files.**
 
 ---
 
 ## Closing: what I learned by going upstream
 
-I started this journey trying to make engineers faster. Spec2PR began as a code accelerator.
+I started this journey trying to make engineers faster. What I found was a different problem entirely.
 
-What I discovered was a different problem entirely.
+The teams that struggled most with AI-assisted development were not struggling because the models were insufficient. They were struggling because their delivery systems lacked the structure to give AI the context it needed to be useful at scale.
 
-The teams that struggled most with AI-assisted development were not struggling because the models were insufficient. They were struggling because their delivery systems lacked the structure to give AI tools the context they needed to be useful at scale.
-
-The engineers who got the most value from AI were the ones who brought the most engineering clarity to their prompts. That is not a coincidence. **AI models are context amplifiers. The quality of what comes out is bounded by the quality of what goes in.**
-
-And the quality of what goes in is an organizational problem, not a tooling problem.
+**AI models are context amplifiers. The quality of what comes out is bounded by the quality of what goes in. And the quality of what goes in is an organizational problem, not a tooling problem.**
 
 > *"I started by trying to accelerate coding. I ended up realizing the real bottleneck was coordination."*
 
-Software delivery problems are coordination problems. Intelligent Software Delivery is not about writing code faster — it is about preserving engineering intent, propagating architectural context, and treating the SDLC as a unified orchestration system rather than a set of disconnected handoffs.
+The future of software delivery is not faster coding. It is intelligent orchestration.
 
-That is the idea behind Spec2PR. And it is the thread I will continue pulling on in this series.
+That is the idea behind Spec2PR — and the thread I will continue pulling on in this series.
 
 ---
 
-*This is the first article in a series on Intelligent Software Delivery. Future topics include: Context Is the Real AI Moat, Architecture as Organizational Memory, and Multi-Agent Engineering Workflows.*
+*This is the first article in a series on Intelligent Software Delivery. Future topics: Context Is the Real AI Moat, Architecture as Organizational Memory, and Multi-Agent Engineering Workflows.*
 
 *Published via [spec2pr-articles](https://github.com/mchellappa/spec2pr-articles).*
