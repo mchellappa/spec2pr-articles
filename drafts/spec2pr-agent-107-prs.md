@@ -24,8 +24,6 @@ By Monday morning, the agent had reviewed every alert, produced a fix for every 
 
 On a leadership slide, this is a win. Backlog cleared overnight.
 
-The team saw it differently.
-
 ---
 
 ## What the Metrics Don't Capture
@@ -46,7 +44,7 @@ Here is the part I keep thinking about.
 
 One of the alerts was a Java trust boundary violation in an old codebase. Code from the 1990s that, during build time, pulls in source from another project. The agent saw the violation, could not change the original source, and wrote a Python script to handle it at build time.
 
-Technically, the alert was resolved. The scanner was happy.
+Technically, the alert was resolved. 
 
 But any engineer who has worked on legacy systems knows what that means. You now have a silent dependency. If anyone changes the original code, for any reason, the Python script breaks. There is no warning. There is no test. The fix works until it doesn't, and when it stops working, the person debugging it has no idea why.
 
@@ -72,18 +70,13 @@ The CIO is measuring output. The Principal Engineer is measuring trust. The cost
 
 ## What I Actually Want to Know
 
-I don't have a tidy answer here. I am not sure anyone does yet.
-
-But I am curious whether others have seen this same dynamic, where the metrics say one thing and the engineers feel something different.
+I don't have a tidy answer here. But I am curious whether others have seen this same dynamic, where the metrics say one thing and the engineers feel something different.
 
 A few honest questions:
 
-Have your AI agent metrics told a different story than what your engineers experienced on the ground?
-
-How do you measure the review burden an agent creates, not just the output it produces?
-
-Is your organisation pushing toward autonomous agents right now, and if so, what does human oversight look like in practice?
-
-And when an agent finds something genuinely complex, something with history and context and tradeoffs, what should it do? Act, and let a human review it? Or stop and ask first?
+- **Have your AI agent metrics told a different story than what your engineers experienced on the ground?**
+- **How do you measure the review burden an agent creates, not just the output it produces?**
+- **Is your organisation pushing toward autonomous agents right now, and if so, what does human oversight look like in practice?**
+- **And when an agent finds something genuinely complex, something with history and context and tradeoffs, what should it do? Act, and let a human review it? Or stop and ask first?**
 
 I want to hear the real stories in the comments. The ones that didn't make it onto the slide.
