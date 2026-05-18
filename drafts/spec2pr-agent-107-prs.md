@@ -14,99 +14,84 @@
 
 # The Agent That Created 107 PRs (And Why That Was the Problem)
 
-> **Key thesis:** An AI agent that acts without analyzing is just a faster way to make mistakes at scale. The missing step between detect and fix is: understand.
+At my organisation, our leadership classifies AI initiatives into three buckets.
 
-## The Setup: 107 Pull Requests Waiting for You on Monday Morning
+**Vibe Coding** — developers using AI to move faster, autocomplete code, explore ideas. Low structure, high energy, individual productivity gains.
 
-It started as a reasonable idea.
+**Professional AI Assistant** — AI embedded into structured workflows. Thinks before it acts. Works alongside an engineer who stays in the loop.
 
-Our repository had accumulated a backlog of code scanning alerts — the kind that sit in a dashboard for weeks because no single engineer owns them and no sprint ever prioritises them. Security debt. The slow kind.
+**Autonomous Agents** — AI that takes a task end-to-end with minimal human involvement. Acts, decides, commits, raises PRs. Leadership loves this one.
 
-So we did what teams are starting to do: we assigned an AI agent to fix them.
+The push lately has been toward that third bucket. And I get it. The metrics are compelling. Story points closed. Alerts resolved. PRs raised. Numbers that look excellent on a CIO dashboard.
 
-By the next morning, the agent had done exactly what we asked. It had reviewed every open alert. It had produced a code change for every one. It had opened pull requests — 107 of them — and assigned them to engineers for review and approval.
-
-On paper, this looked like a productivity breakthrough. In practice, it was Monday morning and the team had 107 PRs staring at them before their first coffee.
-
-This is not a story about AI failing. The agent worked. This is a story about what "working" means when an agent acts without reasoning — and what we learned from it.
+This is a story about what those numbers don't show.
 
 ---
 
-## What the Agent Did Right
+## 107 Pull Requests, One Monday Morning
 
-Let's be fair, because the agent genuinely did remarkable things.
+We had a backlog of code scanning alerts. The kind that accumulates quietly over months because no sprint ever prioritises it and no single engineer owns it. Security debt, sitting in a dashboard.
 
-It processed the entire alert backlog in one session. It correctly identified the vulnerable code patterns flagged by the scanner. It produced syntactically valid fixes for all of them. It created well-structured PRs with descriptions, linked the originating alert, and assigned reviewers.
+Someone — reasonably — decided to assign an autonomous agent to clear the backlog.
 
-No human would have done that overnight. No human *could* have done that overnight.
+By Monday morning, the agent had done exactly what it was asked. It had reviewed every alert. Produced a code change for every one. Opened 107 pull requests and assigned them to engineers for review.
 
-If the goal was "turn alerts into PRs as fast as possible," the agent achieved it perfectly. The throughput was real. The automation was real. The time saved in mechanical triage was real.
+On a leadership slide, this looks like a win. Backlog cleared overnight. Agent productivity: 107 story points. Engineers can just click approve.
 
-That matters. I don't want to dismiss it.
-
----
-
-## What the Agent Missed: The Analysis Step
-
-Here is what the agent never did: it never asked *why*.
-
-- Why does this alert exist?
-- Is this alert a true positive or a false positive?
-- What is the intent of the code it is changing?
-- Is the proposed fix actually safe in this specific context?
-- Are there 20 alerts that share the same root cause — and could be resolved with one change instead of twenty?
-
-The agent treated each alert as an independent mechanical task: alert exists → apply pattern fix → open PR. It was optimising for closure, not for correctness.
-
-In security work, those are very different things.
-
-Some of the fixes were straightforward and clearly right. But others were patches applied to symptoms rather than causes. A few changed behaviour in subtle ways that only someone familiar with the codebase would catch. And a handful were responding to alerts that, on closer inspection, were misconfigured rules that should have been suppressed — not fixed.
-
-The agent had no way to know this. It had not been asked to reason. It had been asked to act.
+The team's reaction was a little different.
 
 ---
 
-## The Real Cost: Review Burden at Scale
+## What the Metrics Miss
 
-Here is the uncomfortable truth about 107 PRs: they did not eliminate the human work. They redistributed it.
+Here is the thing about 107 PRs: someone still has to read them.
 
-Before the agent, we had a backlog of alerts that engineers occasionally glanced at. After the agent, we had 107 PRs that engineers were *obligated* to review — each one requiring them to:
+Not just skim them. Actually understand them. Because each PR needed an engineer to:
 
-1. Understand the original alert
-2. Read the agent's proposed fix
-3. Evaluate whether the fix was correct and safe
-4. Approve, reject, or request changes
+- Understand the original alert
+- Read what the agent changed and why
+- Decide whether the fix was actually correct — not just syntactically valid, but semantically right for *this* codebase
+- Check whether the fix introduced new risk
+- Catch the ones responding to misconfigured rules that should have been suppressed, not patched
 
-In many cases this took longer than simply fixing the alert would have. The agent had optimised its own throughput at the cost of the team's review capacity.
+Some of the fixes were fine. Straightforward, safe, clearly right. But others patched symptoms rather than causes. A few changed behaviour in subtle ways that only someone familiar with the codebase would notice. And several were technically valid but not the *right* approach for our context.
 
-This is the hidden math of autonomous agents: **the cost of reviewing an AI's work is not zero**. When an agent acts at scale without reasoning, it can move the bottleneck rather than remove it — and sometimes make it worse by generating volume the team cannot absorb.
+The agent didn't know any of this. It wasn't asked to reason. It was asked to act.
 
-107 PRs reviewed over a week by a team that had other priorities is not a productivity win. It is a different kind of backlog.
+The story points looked great. The review queue told a different story.
 
 ---
 
-## Let's Talk: Have You Seen This?
+## The Gap Between the Dashboard and the Codebase
 
-This experience made us rethink something we thought we understood: that automation is always an improvement over manual work.
+This is the tension I keep coming back to.
 
-Maybe it is. Maybe the answer is better tooling, better prompts, better pipelines. Maybe this is just a growing pain and we will figure it out.
+A CIO looking at AI adoption metrics sees: 107 security issues resolved by an autonomous agent. That is a real number. The agent really did produce 107 changes. That is genuinely impressive.
 
-But I am not sure — and I think that uncertainty is worth sitting with for a moment before we rush to the next solution.
+A Principal Engineer looking at the team sees: 107 changes that need to be validated before we can trust any of them, arriving all at once, on top of everything else the team is already carrying.
 
-I am genuinely curious whether others have run into this pattern. A few questions I would love to hear your perspective on:
+Neither view is wrong. They are measuring different things.
 
-**1. Have you had an AI agent generate more work than it saved?**
-Not because it was wrong, but because the volume of its output overwhelmed your review capacity?
+The CIO is measuring output. The Principal Engineer is measuring trust. And the cost of establishing trust in an agent's work — at scale, without prior context — is not zero. It does not show up in the story points.
 
-**2. How do you validate that an agent's fix is actually correct — not just syntactically valid?**
-Do you rely on tests? Code review? A separate validation agent? Something else?
+I am not saying autonomous agents are a mistake. I am saying the metrics we are using to evaluate them might be incomplete. And when leadership optimises for the metric without understanding what it measures, the gap gets wider.
 
-**3. What is your human-AI handoff model for security fixes?**
-Should agents always get human sign-off on the approach before they act? Or is that friction that defeats the purpose?
+---
 
-**4. Where is the right boundary between autonomous action and human approval?**
-One PR per alert? A summary per batch? A reasoning doc before any code? Nothing at all?
+## What I Actually Want to Know
 
-There is no single right answer here. It depends on team size, risk tolerance, codebase complexity, and how much you trust your scanner's signal quality. But I think this conversation is worth having publicly, because most teams are figuring it out in isolation.
+I don't have a clean answer here. I am not sure anyone does yet.
 
-Drop your experience in the comments. I want to hear the honest stories — the ones where it worked, and the ones where it didn't.
+But I am genuinely curious whether others have seen this same dynamic play out — the enthusiasm at the top, the quiet friction at the bottom, and the metrics that don't quite capture what is really happening.
+
+A few questions I would love to hear your honest perspective on:
+
+**Have your AI agent metrics told a different story than your engineers' actual experience?**
+
+**How do you measure the review burden an agent creates, not just the output it produces?**
+
+**Is your organisation in the same rush toward autonomous agents — and if so, what guardrails, if any, are in place?**
+
+**Where do you think the right boundary is between an agent that acts and a human who decides?**
+
+Drop your experience in the comments. The honest stories — the ones that didn't make it onto the leadership slide — are the ones I want to read.

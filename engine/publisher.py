@@ -144,15 +144,16 @@ def update_on_devto(api_key: str, post_id: str, spec: dict, draft_content: str, 
     """PUT updated content to an existing Dev.to article."""
     published = bool(spec.get("publish"))
 
-    body = {
-        "article": {
+    article: dict = {
             "title": spec["title"],
             "body_markdown": _prepend_frontmatter(draft_content),
             "published": published,
             "tags": spec.get("tags", [])[:4],
-            "cover_image": SERIES_COVER_IMAGE,
         }
-    }
+    if spec.get("series"):
+        article["series"] = spec["series"]
+
+    body = {"article": article}
 
     data = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(
