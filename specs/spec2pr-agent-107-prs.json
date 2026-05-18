@@ -1,0 +1,35 @@
+{
+  "id": "spec2pr-agent-107-prs",
+  "title": "Spec2PR: The Agent That Created 107 PRs (And Why That Was the Problem)",
+  "audience": "Engineering leaders, DevSecOps practitioners, and senior engineers evaluating AI agents in CI/CD pipelines",
+  "tone": "Honest and reflective — a real story told without spin, inviting debate and shared experience",
+  "key_thesis": "An AI agent that acts without analyzing is just a faster way to make mistakes at scale. The missing step between detect and fix is: understand.",
+  "tags": ["ai", "devsecops", "softwareengineering", "github"],
+  "publish": false,
+  "sections": [
+    {
+      "heading": "The Setup: 107 Pull Requests Waiting for You on Monday Morning",
+      "intent": "Open with the scene. Engineers arrive to find 107 PRs created overnight by an agent tasked with fixing code scanning alerts. Set the tone — this is not a horror story, but it is a lesson."
+    },
+    {
+      "heading": "What the Agent Did Right",
+      "intent": "Give the agent credit. It found every alert. It produced a fix for every alert. It moved fast. This section is important — we are not anti-AI, and we need to be fair."
+    },
+    {
+      "heading": "What the Agent Missed: The Analysis Step",
+      "intent": "The agent treated every alert as a mechanical patch. It never asked: is this the right fix? Is this alert a false positive? Does this change break the intent of the code? The missing step was deliberate reasoning before action."
+    },
+    {
+      "heading": "The Real Cost: Review Burden at Scale",
+      "intent": "107 PRs is not a productivity win if each PR requires a human to understand the context, verify the fix is safe, and approve. The agent moved the bottleneck, it did not remove it. In some cases it made it worse."
+    },
+    {
+      "heading": "The Fix: Require a Spec Before the Code",
+      "intent": "The Spec2PR approach as the antidote. Before the agent writes any code, require it to produce a plan: what alert, what is the root cause, what is the proposed fix, what is the risk of the fix. A human reviews the spec, not 107 PRs."
+    },
+    {
+      "heading": "Let's Talk: Have You Seen This?",
+      "intent": "Open, conversational closing. Invite readers to share their own experiences. Pose 3-4 direct questions: How do you validate AI agent output? What is your human-AI handoff model? Should agents always require approval of the approach first?"
+    }
+  ]
+}

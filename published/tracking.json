@@ -11,6 +11,17 @@
       "spec_file": "specs\\spec2pr-reimagining-the-sdlc.json",
       "draft_file": "drafts\\spec2pr-reimagining-the-sdlc.md",
       "updated_at": "2026-05-18T03:24:42.515054+00:00"
+    },
+    {
+      "id": "spec2pr-agent-107-prs",
+      "title": "Spec2PR: The Agent That Created 107 PRs (And Why That Was the Problem)",
+      "target": "devto",
+      "post_id": "3693154",
+      "url": "https://dev.to/mchellappa/spec2pr-the-agent-that-created-107-prs-and-why-that-was-the-problem-4oj1-temp-slug-6406950",
+      "publish_status": "draft",
+      "published_at": "2026-05-18T11:33:07.691356+00:00",
+      "spec_file": "specs\\spec2pr-agent-107-prs.json",
+      "draft_file": "drafts\\spec2pr-agent-107-prs.md"
     }
   ]
 }
