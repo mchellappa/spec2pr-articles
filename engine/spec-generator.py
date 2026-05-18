@@ -18,6 +18,16 @@ REQUIRED_KEYS = {
 }
 MIN_TAG_LENGTH = 4
 MAX_TAG_COUNT = 5
+STOP_WORDS = {
+    "about",
+    "from",
+    "that",
+    "this",
+    "with",
+    "into",
+    "when",
+    "where",
+}
 
 
 def slugify(value: str) -> str:
@@ -117,7 +127,7 @@ def _extract_tags(title: str, thesis: str) -> list[str]:
     candidates = re.findall(rf"[a-zA-Z]{{{MIN_TAG_LENGTH},}}", f"{title} {thesis}".lower())
     deduped: list[str] = []
     for token in candidates:
-        if token not in deduped:
+        if token not in STOP_WORDS and token not in deduped:
             deduped.append(token)
         if len(deduped) == MAX_TAG_COUNT:
             break

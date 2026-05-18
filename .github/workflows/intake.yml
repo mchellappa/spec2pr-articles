@@ -19,7 +19,7 @@ jobs:
       - name: Validate idea files exist
         run: |
           set -euo pipefail
-          count=$(find ideas -maxdepth 1 -type f -name '*.md' | wc -l | tr -d ' ')
+          count=$(find ideas -maxdepth 1 -type f -name '*.md' | awk 'END { print NR + 0 }')
           echo "Detected $count idea file(s)."
           if [ "$count" -eq 0 ]; then
             echo "No idea markdown files found in /ideas."

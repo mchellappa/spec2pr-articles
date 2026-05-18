@@ -7,10 +7,18 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = REPO_ROOT / "engine" / "spec-generator.py"
-MODULE_SPEC = importlib.util.spec_from_file_location("spec_generator", MODULE_PATH)
-spec_generator = importlib.util.module_from_spec(MODULE_SPEC)
-assert MODULE_SPEC and MODULE_SPEC.loader
-MODULE_SPEC.loader.exec_module(spec_generator)
+
+
+def _load_module():
+    module_spec = importlib.util.spec_from_file_location("spec_generator", MODULE_PATH)
+    if not module_spec or not module_spec.loader:
+        raise RuntimeError(f"Unable to load module spec from {MODULE_PATH}")
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    return module
+
+
+spec_generator = _load_module()
 
 
 class SpecGeneratorTests(unittest.TestCase):
