@@ -23,6 +23,17 @@
       "spec_file": "specs\\spec2pr-agent-107-prs.json",
       "draft_file": "drafts\\spec2pr-agent-107-prs.md",
       "updated_at": "2026-05-18T14:33:03.223512+00:00"
+    },
+    {
+      "id": "spec2pr-design-first-pipeline",
+      "title": "Spec2PR: The Design-First Pipeline \u2014 From LLD to Production-Ready Microservice in 30 Seconds",
+      "target": "devto",
+      "post_id": "3702359",
+      "url": "https://dev.to/mchellappa/spec2pr-the-design-first-pipeline-from-lld-to-production-ready-microservice-in-30-seconds-3ih-temp-slug-6456054",
+      "publish_status": "draft",
+      "published_at": "2026-05-19T16:25:59.669181+00:00",
+      "spec_file": "specs\\spec2pr-design-first-pipeline.json",
+      "draft_file": "drafts\\spec2pr-design-first-pipeline.md"
     }
   ]
 }
