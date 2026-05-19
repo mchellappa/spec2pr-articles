@@ -32,6 +32,6 @@
     "softwareengineering",
     "architecture"
   ],
-  "publish": false,
+  "publish": true,
   "series": "Spec2PR: Intelligent Software Delivery"
 }
