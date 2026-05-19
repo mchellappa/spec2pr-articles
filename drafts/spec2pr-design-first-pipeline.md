@@ -6,9 +6,9 @@
 
 # Spec2PR: The Design-First Pipeline
 
-On a large delivery program, one of the most expensive things you can do is start a LARB review with an incomplete document. I know because I spent months watching it happen.
+On a large delivery program, one of the most expensive things you can do is start a LARB (Architecture Review Board) review with an incomplete document. I know because I spent months watching it happen.
 
-The architecture team met twice a week, three hours combined, to review LLDs before they went to the formal board. Almost none passed the first time. The same security architect asked the same questions in every session. Error handling, data classification, alerting, unhappy paths. And the architects presenting the next LLD had still not incorporated those comments from the week before.
+The architecture team met twice a week, three hours combined, to review LLDs (Low Level Design documents) before they went to the formal board. Almost none passed the first time. The same security architect asked the same questions in every session. Error handling, data classification, alerting, unhappy paths. And the architects presenting the next LLD had still not incorporated those comments from the week before.
 
 I don't fully blame the presenters. Business teams often don't share the unhappy path. But as an architect, my job is to build a fool-proof design and that means those gaps have to be caught somewhere.
 
@@ -28,7 +28,7 @@ The architecture team's reaction was positive. They acknowledged the gaps the to
 
 As the project grew, leadership had limited visibility into what was happening across squads. With multiple teams running in parallel, the handshake points between business, architecture, and engineering were hard to track. Jira was already the source of truth for the project, so I had to build Jira integration anyway for the code development workflow.
 
-Once that pipeline was in place, I added two more commands. Summarize Jira reads the story and gives the architect a concise picture of what the business is asking for. Generate LLD takes that further. It prompts the architect with specific questions, builds a full document across 10 sections, and covers all the NFRs including error handling, security, data classification, and alerting. The architect still has to review it and fill in company-specific details and standards. But the structure is there, the questions are answered, and the document is ready to take into a review.
+Once that pipeline was in place, I added two more commands. Summarize Jira reads the story and gives the architect a concise picture of what the business is asking for. Generate LLD takes that further. It prompts the architect with specific questions, builds a full document across 10 sections, and covers all the NFRs (non-functional requirements) including error handling, security, data classification, and alerting. The architect still has to review it and fill in company-specific details and standards. But the structure is there, the questions are answered, and the document is ready to take into a review.
 
 ---
 
