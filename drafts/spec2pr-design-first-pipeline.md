@@ -6,9 +6,9 @@
 
 # Spec2PR: The Design-First Pipeline
 
-I joined this project last year. The teams I had worked with before were more agile, so this process-driven environment was actually refreshing. Development does not begin until the LLD is approved. I liked that.
+On a large delivery program, one of the most expensive things you can do is start a LARB review with an incomplete document. I know because I spent months watching it happen.
 
-But the more LARB reviews I attended, the more I noticed a pattern. The documents kept coming in incomplete. I would have to challenge the presenter on basic error handling questions every single time. The same security architect kept asking the same security questions in every review. And the architects presenting the next LLD had still not incorporated those comments.
+The architecture team met twice a week, three hours combined, to review LLDs before they went to the formal board. Almost none passed the first time. The same security architect asked the same questions in every session. Error handling, data classification, alerting, unhappy paths. And the architects presenting the next LLD had still not incorporated those comments from the week before.
 
 I don't fully blame the presenters. Business teams often don't share the unhappy path. But as an architect, my job is to build a fool-proof design and that means those gaps have to be caught somewhere.
 
