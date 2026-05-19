@@ -1,6 +1,6 @@
 {
   "id": "spec2pr-design-first-pipeline",
-  "title": "Spec2PR: The Design-First Pipeline — From LLD to Production-Ready Microservice in 30 Seconds",
+  "title": "Spec2PR: The Design-First Pipeline",
   "audience": "Senior engineers, software architects, and engineering leads",
   "tone": "Practical and demonstration-driven — show the workflow in action",
   "key_thesis": "Most teams write an LLD, hand it to a developer, and hope the implementation matches the design intent. Spec2PR eliminates that handoff gap. This article walks through the complete design-first pipeline built into the DevEx AI Assistant VS Code extension — from a requirements document to a fully generated Spring Boot microservice with tests, Kubernetes configs, and OpenAPI docs in under 30 seconds.",
