@@ -8,7 +8,9 @@
 
 On a large delivery program, one of the most expensive things you can do is start a LARB (Architecture Review Board) review with an incomplete document. I know because I spent months watching it happen.
 
-The architecture team met twice a week, three hours combined, to review LLDs (Low Level Design documents) before they went to the formal board. Almost none passed the first time. The same security architect asked the same questions in every session. Error handling, data classification, alerting, unhappy paths. And the architects presenting the next LLD had still not incorporated those comments from the week before.
+The architecture team met twice a week, three hours combined, to review LLDs (Low Level Design documents) before handing them to engineering squads for development. Almost none passed the first time. The same security architect asked the same questions in every session. Error handling, data classification, alerting, unhappy paths. And the architects presenting the next LLD had still not incorporated those comments from the week before.
+
+When the LLD did eventually make it to the engineers, the handshake had its own problem. Junior engineers did not ask the clarifying questions that a senior engineer would. They took the document at face value and started building, gaps and all.
 
 I don't fully blame the presenters. Business teams often don't share the unhappy path. But as an architect, my job is to build a fool-proof design and that means those gaps have to be caught somewhere.
 
